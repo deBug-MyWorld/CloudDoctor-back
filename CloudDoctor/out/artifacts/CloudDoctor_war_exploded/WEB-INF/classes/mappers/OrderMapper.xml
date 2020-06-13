@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ccsu.clouddoctor.dao.OrderMapper">
+    <insert id="addOrder" parameterType="order">
+        insert into cloud_doctor.my_order(username, order_id, order_date, income, outcome, res, status)
+        values(#{username},#{orderId},#{orderDate},#{income},#{outcome},#{res},#{status})
+    </insert>
+
+    <select id="queryOrderByDate"  resultType="order">
+        select * from cloud_doctor.my_order
+        <where>
+            <if test="username!=''">
+                username=#{username}
+            </if>
+            <if test="startDate!=null">
+                <![CDATA[and DATE_FORMAT(order_date,'%Y-%m-%d')>=DATE_FORMAT(#{startDate},'%Y-%m-%d')]]>
+            </if>
+            <if test="endDate!=null">
+                <![CDATA[and DATE_FORMAT(order_date,'%Y-%m-%d')<=DATE_FORMAT(#{endDate},'%Y-%m-%d')]]>
+            </if>
+        </where>
+        order by order_date desc
+    </select>
+
+
+</mapper>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ccsu.clouddoctor.dao.UserMapper">
+    <insert id="addUser" parameterType="user">
+        insert into cloud_doctor.user(username, password)
+        values (#{username},#{password})
+    </insert>
+
+    <select id="queryUserByUname" parameterType="String" resultType="user">
+        select * from cloud_doctor.user where username = #{username}
+    </select>
+
+    <update id="updateUserByUname" parameterType="user">
+        update cloud_doctor.user set place=#{place},age=#{age},sex=#{sex},birthday=#{birthday},phone=#{phone},email=#{email}
+        where username=#{username}
+    </update>
+
+    <update id="updateIcon">
+        update cloud_doctor.user set icon=#{url} where username=#{username}
+    </update>
+
+    <update id="updatePassWord">
+        update cloud_doctor.user set password=#{password} where username=#{username}
+    </update>
+
+    <update id="updateMoney">
+        update cloud_doctor.user set money=#{money} where username=#{username}
+    </update>
+
+    <select id="queryAllUser" resultType="user">
+        select * from cloud_doctor.user
+    </select>
+
+    <update id="updateUserByAdmin" >
+        update cloud_doctor.user
+        set place=#{place},age=#{age},sex=#{sex},birthday=#{birthday},phone=#{phone},email=#{email},money=#{money},is_doctor=#{isDoctor},is_admin=#{isAdmin}
+        where username=#{username}
+    </update>
+
+    <delete id="deleteUserByAdmin" parameterType="int">
+        delete from cloud_doctor.user where id=#{id}
+    </delete>
+</mapper>

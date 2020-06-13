@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ccsu.clouddoctor.dao.DoctorMapper">
+    <select id="selectByDpm" parameterType="String" resultType="doctor">
+        select doctor_id,doctor_name,icon,good_at from cloud_doctor.doctors
+        <where>
+            <if test="departmentBig!='全部'">
+                department_big=#{departmentBig} and is_free=1 and tag=0
+            </if>
+            <if test="departmentBig=='全部'">
+                is_free=1 and tag=0
+            </if>
+        </where>
+    </select>
+
+    <select id="getRecommend" resultType="String">
+        select distinct department_big from cloud_doctor.doctors where recommend=1 and tag=0
+    </select>
+
+    <select id="selectByRecommend" parameterType="String" resultType="doctor">
+        select doctor_id,doctor_name,icon,good_at,rate,department_small
+        from cloud_doctor.doctors where department_big=#{departmentBig} and recommend=1 and tag=0 limit 0,4;
+    </select>
+
+    <select id="selectDoctorByName" parameterType="String" resultType="doctor">
+        select doctor_id,doctor_name,department_small,icon,good_at from cloud_doctor.doctors
+        where doctor_name like "%"#{key}"%"
+    </select>
+
+    <select id="queryDoctorByDpm" resultType="doctor" parameterType="String">
+        select doctor_id,doctor_name,icon,good_at,price,rate,department_small
+        from cloud_doctor.doctors where department_big=#{dpm} or department_small=#{dpm} and tag=0
+    </select>
+
+    <select id="getDoctorInfoById" parameterType="int" resultType="doctor">
+        select doctor_id,doctor_name,icon,department_big,department_small,description,good_at,price,tag
+        from cloud_doctor.doctors where doctor_id=#{doctorId}
+    </select>
+
+    <update id="updateDoctorTag" parameterType="int">
+        update cloud_doctor.doctors set tag=#{tag} where doctor_id=#{doctorId}
+    </update>
+
+    <select id="selectAllDoctor" resultType="doctor">
+        select * from cloud_doctor.doctors order by create_time desc
+    </select>
+
+    <insert id="addDoctor" parameterType="doctor">
+        insert into cloud_doctor.doctors(doctor_name, department_big, department_small, icon, description, good_at, create_time, create_name, tag, price, is_free, rate, recommend)
+        values (#{doctorName},#{departmentBig},#{departmentSmall},#{icon},#{description},#{goodAt},#{createTime},#{createName},#{tag},#{price},#{isFree},#{rate},#{recommend})
+    </insert>
+
+    <delete id="deleteDoctorById" parameterType="int">
+        delete from cloud_doctor.doctors where doctor_id=#{doctorId}
+    </delete>
+
+    <update id="updateDoctor" parameterType="doctor">
+        update cloud_doctor.doctors
+         set department_big=#{departmentBig},department_small=#{departmentSmall},icon=#{icon},description=#{description},
+        good_at=#{goodAt},tag=#{tag},price=#{price},is_free=#{isFree},rate=#{rate},recommend=#{recommend}
+        where doctor_id=#{doctorId}
+    </update>
+
+    <select id="selectDoctorByAdmin" parameterType="String" resultType="doctor">
+        select * from cloud_doctor.doctors where doctor_name like "%"#{key}"%" order by create_time desc
+    </select>
+</mapper>
